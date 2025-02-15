@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Text Generator</h1>
+        <textarea id="prompt" placeholder="Enter your text prompt..."></textarea>
+        <button onclick="generateText()">Generate</button>
+        <div id="output">AI response will appear here...</div>
+    </div>
+
+    <script>
+        async function generateText() {
+    const prompt = document.getElementById("prompt").value;
+    document.getElementById("output").innerText = "Generating... Please wait.";
+
+    try {
+        const response = await fetch("http://localhost:5050/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        document.getElementById("output").innerText = data.response || "No response received.";
+            } catch (error) {
+        document.getElementById("output").innerText = "⚠️ Error: " + error.message;
+        }
+    }
+
+    </script>
+</body>
+</html>
